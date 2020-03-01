@@ -101,8 +101,11 @@ alias lr='ls -lashtr'
 alias fuck='sudo "$BASH" -c "$(history -p !!)"'
 alias sync='onedrive --synchronize'
 alias duh='du -sh --exclude /mnt -- * | sort -hr'
+alias remote="ssh -D 3333 rsucco@bastion.ccri.com"
 alias push="git push origin master"
 alias add="git add ."
+alias commit="git commit"
+alias vt="cd ~/OneDrive/School/VT"
 
 xhost +local:root > /dev/null 2>&1
 
