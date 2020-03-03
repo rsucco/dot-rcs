@@ -90,22 +90,7 @@ fi
 
 unset use_color safe_term match_lhs sh
 
-alias cp="cp -i"                          # confirm before overwriting something
-alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
-alias np='nano -w PKGBUILD'
-alias more=less
-alias vi=vim
-alias ll='ls -lash'
-alias lr='ls -lashtr'
-alias fuck='sudo "$BASH" -c "$(history -p !!)"'
-alias sync='onedrive --synchronize'
-alias duh='du -sh --exclude /mnt -- * | sort -hr'
-alias remote="ssh -D 3333 rsucco@bastion.ccri.com"
-alias push="git push origin master"
-alias add="git add ."
-alias commit="git commit"
-alias vt="cd ~/OneDrive/School/VT"
+
 
 xhost +local:root > /dev/null 2>&1
 
@@ -148,7 +133,26 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
+alias cp="cp -i"                          # confirm before overwriting something
+alias df='df -h'                          # human-readable sizes
+alias free='free -m'                      # show sizes in MB
+alias np='nano -w PKGBUILD'
+alias more=less
+alias vi=vim
+alias ll='ls -lash'
+alias lr='ls -lashtr'
+alias fuck='sudo "$BASH" -c "$(history -p !!)"'
+alias sync='onedrive --synchronize'
+alias duh='du -sh --exclude /mnt -- * | sort -hr'
 alias netstat='ss'
 alias condashell='eval "$(/home/ryan/anaconda3/bin/conda shell.bash hook)"'
 alias noconda='source ~/.bashrc'
 alias init6='sudo reboot now'
+alias add="git add ."
+alias commit="git commit -m"
+alias push="git push origin master"
+alias pushto="git push origin"
+alias pull="git pull"
+alias jn="jupyter notebook"
+
