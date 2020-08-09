@@ -108,12 +108,14 @@ alias iptop='sudo iftop -i wlp0s20u10' # Make sure this interface matches
 alias nrs='npm run serve'
 alias fix='killall kscreenlocker_greet' # Figure out why tf this is happening
 alias getmirrors='sudo reflector --country United\ States --age 12 --latest 20 --sort rate --save /etc/pacman.d/mirrorlist' # Use when pacman downloads are getting slow
+alias checkrestart='kernelname=`uname -r` && kernelname=${kernelname//-/.} && pacman -Qn | grep -q ${kernelname::-4} && echo "No reboot needed" || echo "Reboot needed"' # Check if the current kernel matches the installed one
 alias netstat='ss'
 alias condashell='eval "$(/home/ryan/anaconda3/bin/conda shell.bash hook)"' # This is what the conda bashrc additions do. I don't like it happening automatically.
 alias noconda='source ~/.bashrc'
 alias jn="jupyter notebook"
 alias sudo='sudo ' # Allow aliases to be passed to sudo
 alias uncommit='git reset HEAD~1 --soft'
+alias mntremote='sshfs desktop: ~/ccri/'
 
 xhost +local:root > /dev/null 2>&1
 
