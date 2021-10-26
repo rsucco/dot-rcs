@@ -5,30 +5,30 @@
 [[ $- != *i* ]] && return
 
 colors() {
-	local fgc bgc vals seq0
+    local fgc bgc vals seq0
 
-	printf "Color escapes are %s\n" '\e[${value};...;${value}m'
-	printf "Values 30..37 are \e[33mforeground colors\e[m\n"
-	printf "Values 40..47 are \e[43mbackground colors\e[m\n"
-	printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
+    printf "Color escapes are %s\n" '\e[${value};...;${value}m'
+    printf "Values 30..37 are \e[33mforeground colors\e[m\n"
+    printf "Values 40..47 are \e[43mbackground colors\e[m\n"
+    printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
 
-	# foreground colors
-	for fgc in {30..37}; do
-		# background colors
-		for bgc in {40..47}; do
-			fgc=${fgc#37} # white
-			bgc=${bgc#40} # black
+    # foreground colors
+    for fgc in {30..37}; do
+        # background colors
+        for bgc in {40..47}; do
+            fgc=${fgc#37} # white
+            bgc=${bgc#40} # black
 
-			vals="${fgc:+$fgc;}${bgc}"
-			vals=${vals%%;}
+            vals="${fgc:+$fgc;}${bgc}"
+            vals=${vals%%;}
 
-			seq0="${vals:+\e[${vals}m}"
-			printf "  %-9s" "${seq0:-(default)}"
-			printf " ${seq0}TEXT\e[m"
-			printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
-		done
-		echo; echo
-	done
+            seq0="${vals:+\e[${vals}m}"
+            printf "  %-9s" "${seq0:-(default)}"
+            printf " ${seq0}TEXT\e[m"
+            printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
+        done
+        echo; echo
+    done
 }
 
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
@@ -60,62 +60,79 @@ match_lhs=""
 [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
 
 if ${use_color} ; then
-	# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
-	if type -P dircolors >/dev/null ; then
-		if [[ -f ~/.dir_colors ]] ; then
-			eval $(dircolors -b ~/.dir_colors)
-		elif [[ -f /etc/DIR_COLORS ]] ; then
-			eval $(dircolors -b /etc/DIR_COLORS)
-		fi
-	fi
+    # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
+    if type -P dircolors >/dev/null ; then
+        if [[ -f ~/.dir_colors ]] ; then
+            eval $(dircolors -b ~/.dir_colors)
+        elif [[ -f /etc/DIR_COLORS ]] ; then
+            eval $(dircolors -b /etc/DIR_COLORS)
+        fi
+    fi
 
-	if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
-	else
-		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
-	fi
+    if [[ ${EUID} == 0 ]] ; then
+        PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
+    else
+        PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
+    fi
 
-	alias ls='ls --color=auto'
-	alias grep='grep --colour=auto'
-	alias egrep='egrep --colour=auto'
-	alias fgrep='fgrep --colour=auto'
+    alias ls='ls --color=auto'
+    alias grep='grep --colour=auto'
+    alias egrep='egrep --colour=auto'
+    alias fgrep='fgrep --colour=auto'
 else
-	if [[ ${EUID} == 0 ]] ; then
-		# show root@ when we don't have colors
-		PS1='\u@\h \W \$ '
-	else
-		PS1='\u@\h \w \$ '
-	fi
+    if [[ ${EUID} == 0 ]] ; then
+        # show root@ when we don't have colors
+        PS1='\u@\h \W \$ '
+    else
+        PS1='\u@\h \w \$ '
+    fi
 fi
 
 unset use_color safe_term match_lhs sh
 
-alias cp="cp -i"                          # confirm before overwriting something
-alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
-alias vi=vim
-alias ll='ls -lash'
+# git aliases
+alias gf='git fetch -p'
+alias gp='git pull'
+alias gcommit='git commit -m '
+alias guncommit='git reset HEAD~1 --soft'
+alias glog='git log --oneline'
+alias pmain="git push origin main"
+alias pmaint="git push origin main --tags"
+alias pmast="git push origin master"
+alias pmastt="git push origin master --tags"
+
+# common utilities with extra options or aliases for older names that i type by habit
+alias cp="cp -i"
+alias df='df -h'
+alias free='free -m'
+alias ll='ls -lsh'
+alias la='ls -lash'
 alias lt='ls -lashtr'
 alias lR='ls -laR' # Recursive ls -la
-alias fuck='sudo "$BASH" -c "$(history -p !!)"' # Equivalent to typing sudo !!
-alias sync='onedrive --synchronize'
 alias duh='du -sh --exclude /mnt -- * | sort -hr' # Need to rewrite this one to include dotfiles
-alias vt="cd ~/OneDrive/School/VT"
-alias tunnel='sudo systemctl start openvpn-client@TunnelBearUnitedStates.service' # Need openvpn installed
-alias notunnel='sudo systemctl stop openvpn-client@TunnelBearUnitedStates.service'
-alias scan='sudo nmap -O -sV -T4 -d'
-alias iptop='sudo iftop -i wlp0s20u10' # Make sure this interface matches
-alias nrs='npm run serve'
-alias fix='killall kscreenlocker_greet' # Figure out why tf this is happening
-alias getmirrors='sudo reflector --country United\ States --age 12 --latest 20 --sort rate --save /etc/pacman.d/mirrorlist' # Use when pacman downloads are getting slow
-alias checkrestart='kernelname=`uname -r` && kernelname=${kernelname//-/.} && pacman -Qn | grep -q ${kernelname::-4} && echo "No reboot needed" || echo "Reboot needed"' # Check if the current kernel matches the installed one
 alias netstat='ss'
-alias condashell='eval "$(/home/ryan/anaconda3/bin/conda shell.bash hook)"' # This is what the conda bashrc additions do. I don't like it happening automatically.
-alias noconda='source ~/.bashrc'
-alias jn="jupyter notebook"
 alias sudo='sudo ' # Allow aliases to be passed to sudo
-alias uncommit='git reset HEAD~1 --soft'
-alias mntremote='sshfs desktop: ~/ccri/'
+alias vi=vim
+
+# useful commands of my own devising
+alias sync='onedrive --synchronize' # Sync OneDrive to ~/OneDrive
+alias fuck='sudo "$BASH" -c "$(history -p !!)"' # Equivalent to typing sudo !!
+alias scan='sudo nmap -O -sV -T4 -d' # Basic nmap port scan
+alias iptop='sudo iftop -i enp0s25' # Make sure this interface matches
+alias getmirrors='sudo reflector --country United\ States --age 12 --latest 20 --sort rate --save /etc/pacman.d/mirrorlist' # Use when pacman downloads are getting slow
+alias chkrbt='kernelname=`uname -r` && kernelname=${kernelname//-/.} && pacman -Qn | grep -q ${kernelname::-4} && echo "No reboot needed" || echo "Reboot needed"' # Check if the current kernel matches the installed one (is a reboot needed)
+alias condashell='source /opt/miniconda3/bin/activate root' # activate the conda shell; normally i hate it
+alias noconda='conda deactivate' # deactivate the conda shell
+alias pbcopy='xsel --clipboard --input' # same as the macOS command
+alias pbpaste='xsel --clipboard --output' # same as the macOS command
+alias savefx='killall /usr/lib/firefox/firefox' # kill firefox ungracefully; this makes it restore session next time it's opened
+
+# on-demand mounting and tunnels
+alias mntmac='sshfs beauty: ~/mac/'
+alias mntlongshirestonberry='sshfs longshirestonberry:/var/www/html longshirestonberry'
+alias mntvelo='sshfs workmac:velo ~/velo'
+alias velovpn='wg-quick up ~/_velo_local/velo.conf'
+alias novelovpn='sudo wg-quick down ~/velo/velo.conf'
 
 xhost +local:root > /dev/null 2>&1
 
@@ -158,3 +175,7 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
+export PATH=$PATH:/home/ryan/.local/bin:/home/ryan/scripts/bin:/home/ryan/bin:
+export MOZ_X11_EGL=1
+
